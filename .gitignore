@@ -1,2 +1,6 @@
 tags
 vendor/
+tmp/
+config/
+!config/config.php.example
+invoices/
