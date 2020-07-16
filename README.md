@@ -29,9 +29,9 @@ php-codesniffer (PSR2)
 
 
 ### Tasks:
-  - [ ] Create a Word template for the invoice
-  - [ ] Connect to Toggl API and download report with the data
-  - [ ] Save invoice as docx file
+  - [x] Create a Word template for the invoice
+  - [x] Connect to Toggl API and download report with the data
+  - [x] Save invoice as docx file
   - [ ] Convert invoice to PDF
   - [ ] Build interface for invoice data manipulation
   - [ ] Insert invoices to the DB
