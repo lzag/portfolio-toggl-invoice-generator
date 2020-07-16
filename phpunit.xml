@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="bootstrap.php" >
+<phpunit bootstrap="bootstrap.php" testdox="true" >
   <testsuites>
-    <testsuite name="Invoice">
-      <file>tests/unit/InvoiceControllerTest.php</file>
+    <testsuite name="Invoices">
+      <directory>tests/</directory>
     </testsuite>
   </testsuites>
 </phpunit>
