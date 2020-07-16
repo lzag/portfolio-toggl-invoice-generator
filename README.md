@@ -37,3 +37,4 @@ php-codesniffer (PSR2)
   - [ ] Insert invoices to the DB
   - [ ] Send invoice by email
   - [ ] Show all invoices on the page
+  - [ ] Dockerize the app
