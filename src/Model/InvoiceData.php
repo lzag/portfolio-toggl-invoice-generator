@@ -2,6 +2,7 @@
 namespace App\Model;
 
 use App\Model\ClientData;
+use App\Model\Database;
 
 class InvoiceData
 {
@@ -16,6 +17,8 @@ class InvoiceData
 
     private $bank_data;
 
+    private $db;
+
     public function __construct($start_date, $end_date, $client, $invoice_date = '')
     {
         $this->start_date = $start_date;
@@ -26,9 +29,11 @@ class InvoiceData
         $this->my_data = new PersonalInfo;
         $this->projects = $this->getSummaryProjectData($start_date, $end_date, $client);
 
-        $date = new \DateTime();
-        $this->invoice_date = $date->format('Y/m/d');
-        $this->invoice_due = $date->add(new \DateInterval('P30D'))->format('Y/m/d');
+        if ($invoice_date === '') {
+            $date = new \DateTime();
+            $this->invoice_date = $date->format('Y/m/d');
+            $this->invoice_due = $date->add(new \DateInterval('P30D'))->format('Y/m/d');
+        }
     }
 
     private function getSummaryProjectData($start_date, $end_date, $client)
@@ -39,6 +44,32 @@ class InvoiceData
             $end_date,
             $client
         );
+    }
+
+    public function save()
+    {
+        $db = new Database();
+        $db->connect();
+        $conn = $db->getConn();
+        $sql = "INSERT INTO invoices (start_date, end_date, invoice_date, invoice_due) VALUES (?,?,?,?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            $this->start_date,
+            $this->end_date,
+            $this->invoice_date,
+            $this->invoice_due,
+            ]);
+        return true;
+    }
+
+    public function getId()
+    {
+        $db = new Database();
+        $db->connect();
+        $conn = $db->getConn();
+        $sql = "SELECT MAX(id) AS id FROM invoices";
+        $id = $conn->query($sql)->fetchObject()->id;
+        return $id + 1;
     }
 
     public function getSummaryProjects()

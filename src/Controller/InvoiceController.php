@@ -34,8 +34,6 @@ class InvoiceController
      */
     public function create(InvoiceData $invoiceData): bool
     {
-        $me = 'Test file';
-        $invoice_file = $this->invoice_path . 'Invoice.docx';
         $templateProcessor = new TemplateProcessor(PROJECT_DIR . '/invoice_templates/Invoice_template.docx');
 
         // fill in  my information section
@@ -47,12 +45,14 @@ class InvoiceController
 
         // fill in client data
         $templateProcessor->setValue('company_name', $invoiceData->getClientData()->getCompanyName());
-        $templateProcessor->setValue('company_address', $invoiceData->getClientData()->getCompanyAddress());
+        $templateProcessor->setValue('company_address', $invoiceData->getClientData()->getFormattedAddress());
         $templateProcessor->setValue('company_country', $invoiceData->getClientData()->getCompanyCountry());
         $templateProcessor->setValue('contact_name', $invoiceData->getClientData()->getContactName());
         $templateProcessor->setValue('contact_email', $invoiceData->getClientData()->getContactEmail());
 
         // invoice data section
+        $invoice_id = $invoiceData->getId();
+        $templateProcessor->setValue('invoice_no', sprintf('%04d', $invoice_id));
         $templateProcessor->setValue('invoice_date', $invoiceData->getInvoiceDate());
         $templateProcessor->setValue('invoice_due', $invoiceData->getInvoiceDue());
         $templateProcessor->setValue('start_date', $invoiceData->getStartDate());
@@ -60,18 +60,39 @@ class InvoiceController
 
         $projects = $invoiceData->getSummaryProjects()->getProjects();
         $projectValues = [];
+        $subtotal = 0;
+        $service_rate = 13.40;
         foreach ($projects as $project) {
+            $total_hours = $project->getTotalHours();
             $projectValues[] = [
-                'service_title' => $project->getTitle(),
+                'service_title'       => $project->getTitle(),
                 'service_description' => $project->getEntriesWithLineBreaks(),
-                'service_hours' => $project->getTotalHours(),
+                'service_hours'       => $total_hours,
+                'service_currency'    => 'CAD',
+                'service_rate'        => number_format($service_rate, 2),
+                'service_amount'      => number_format($service_rate * $total_hours, 2),
             ];
+            $subtotal += $service_rate * $total_hours;
         }
         $templateProcessor->cloneRowAndSetValues('service_title', $projectValues);
+        
+        // calculate total value
+        $tax_rate = 0;
+        $tax_total = $tax_rate * $subtotal;
+        $service_total = $tax_total + $subtotal;
+        $service_currency = 'CAD';
+
+        $templateProcessor->setValue('service_subtotal', number_format($subtotal, 2));
+        $templateProcessor->setValue('service_currency', $service_currency);
+        $templateProcessor->setValue('tax_total', number_format($tax_total, 2));
+        $templateProcessor->setValue('service_total', number_format($service_total, 2));
 
         // bank data
         $templateProcessor->setValue('bank_data', $invoiceData->getBankData()->getAccountNumber());
 
+        $invoice_date = \DateTime::createFromFormat('Y/m/d', $invoiceData->getInvoiceDate());
+        $invoice_date = $invoice_date->format('Y_m_d');
+        $invoice_file = $this->invoice_path . 'Invoice_' . $invoice_id . '_' . $invoice_date . '.docx';
         $return = $templateProcessor->saveAs($invoice_file);
         if (file_exists($invoice_file)) {
             return true;

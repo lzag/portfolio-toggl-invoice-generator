@@ -9,4 +9,17 @@ final class InvoiceDataTest extends TestCase
         $invoiceData = new InvoiceData('2020-05-07', '2020-12-08', 'Dummy');
         $this->assertNotEmpty($invoiceData);
     }
+
+    public function testCanSaveInvoiceToDatabase()
+    {
+        $invoiceData = new InvoiceData('2020-05-07', '2020-12-08', 'Dummy');
+        $this->assertTrue($invoiceData->save());
+    }
+
+    public function testCanGetIdFromDatabase()
+    {
+        $invoiceData = new InvoiceData('2020-05-07', '2020-12-08', 'Dummy');
+        $id = $invoiceData->getId();
+        $this->assertIsInt($id);
+    }
 }
