@@ -17,6 +17,8 @@ class InvoiceData
 
     private $bank_data;
 
+    private $filename;
+
     private $db;
 
     public function __construct($start_date, $end_date, $client, $invoice_date = '')
@@ -60,6 +62,22 @@ class InvoiceData
             $this->invoice_due,
             ]);
         return true;
+    }
+
+    public function setFilename($name)
+    {
+        return $this->filename = $name;
+    }
+
+    public function convertToPdf()
+    {
+        $command = "libreoffice --headless --convert-to pdf invoices/$this->filename --outdir  invoices";
+        exec(
+            $command,
+            $output,
+            $return_var
+        );
+        return $return_var;
     }
 
     public function getId()

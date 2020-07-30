@@ -32,9 +32,9 @@ php-codesniffer (PSR2)
   - [x] Create a Word template for the invoice
   - [x] Connect to Toggl API and download report with the data
   - [x] Save invoice as docx file
-  - [ ] Convert invoice to PDF
+  - [x] Convert invoice to PDF
   - [ ] Build interface for invoice data manipulation
-  - [ ] Insert invoices to the DB
+  - [x] Insert invoices to the DB
   - [ ] Send invoice by email
   - [ ] Show all invoices on the page
   - [x] Dockerize the app

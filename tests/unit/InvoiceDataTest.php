@@ -22,4 +22,11 @@ final class InvoiceDataTest extends TestCase
         $id = $invoiceData->getId();
         $this->assertIsInt($id);
     }
+    
+    public function testCanConvertToPdf()
+    {
+        $invoiceData = new InvoiceData('2020-05-07', '2020-12-08', 'Dummy');
+        $invoiceData->setFilename('Invoice.docx');
+        $this->assertSame(0, $invoiceData->convertToPdf());
+    }
 }
