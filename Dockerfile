@@ -16,6 +16,7 @@ RUN apt-get update && \
     php7.4-xdebug \
     php7.4-mbstring \
     php7.4-zip \
+    php7.4-mysql \
     curl \
     mariadb-client \
     openjdk-14-jdk \
