@@ -24,6 +24,8 @@ RUN apt-get update && \
     libreoffice-java-common
 
 RUN mkdir /invoice-generator
+COPY 000-default.conf /etc/apache2/sites-enabled/
+RUN a2enmod rewrite && service apache2 restart
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
@@ -31,3 +33,4 @@ CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 WORKDIR /invoice-generator
 
 EXPOSE 80
+EXPOSE 443
