@@ -4,7 +4,7 @@ namespace App\Controller;
 use \PhpOffice\PhpWord\TemplateProcessor;
 use \App\Model\InvoiceData;
 
-class InvoiceController
+class InvoiceController extends BaseController
 {
     /*
      * @param string
@@ -99,5 +99,41 @@ class InvoiceController
         } else {
             return false;
         }
+    }
+
+    public function new($start_date, $end_date, $customer, $invoice_date = '')
+    {
+        return $this->view(
+            'invoice/new',
+            [
+            'start_date' => $start_date,
+            'end_date'   => $end_date,
+            'customer'   => $customer,
+            ]
+        );
+    }
+
+    public function edit($data)
+    {
+        $start_date = '01-05-2020';
+        $end_date = '01-05-2020';
+        $client = 'Dummy';
+        $invoice_date = time();
+        $inv = new InvoiceData(
+            $start_date,
+            $end_date,
+            $client,
+            $invoice_date
+        );
+        $data = [
+            'invoice_date' => time(),
+        ];
+        return $this->view(
+            'invoice/edit',
+            [
+            'title'        => 'Invoice Edit',
+            'invoice_data' => $data
+            ]
+        );
     }
 }

@@ -5,3 +5,5 @@ config/
 !config/config.php.example
 invoices/
 *.swp
+*.cache
+public/templates_c/
