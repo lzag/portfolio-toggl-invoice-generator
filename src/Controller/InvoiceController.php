@@ -101,16 +101,20 @@ class InvoiceController extends BaseController
         }
     }
 
-    public function new($start_date, $end_date, $customer, $invoice_date = '')
+    public function new()
     {
         return $this->view(
             'invoice/new',
-            [
-            'start_date' => $start_date,
-            'end_date'   => $end_date,
-            'customer'   => $customer,
-            ]
         );
+    }
+
+    public function fetchServices($start_date, $end_date, $client)
+    {
+        $invData = new InvoiceData($start_date, $end_date, $client);
+        $projects = $invData->getSummaryProjects()->getProjects();
+        $smarty = new \Smarty();
+        $smarty->assign('projects', $projects);
+        return $smarty->display(PROJECT_DIR . '/templates/invoice/services.tpl');
     }
 
     public function edit($data)
