@@ -10,7 +10,14 @@ if (empty($_GET)) {
 } else {
     $controller = filter_var($_GET['controller'], FILTER_SANITIZE_STRING);
     $method = filter_var($_GET['method'], FILTER_SANITIZE_STRING);
-    $params = explode('/', filter_var($_GET['params'], FILTER_SANITIZE_URL));
+    switch ($_SERVER['REQUEST_METHOD']) {
+        case 'GET':
+            $params = explode('/', filter_var($_GET['params'], FILTER_SANITIZE_URL));
+            break;
+        case 'POST':
+            $params = $_POST;
+            break;
+    }
     $classname = 'App\\Controller\\' . ucwords($controller) . 'Controller';
     if (method_exists($classname, $method)) {
         $obj = new $classname;

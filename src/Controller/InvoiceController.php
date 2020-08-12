@@ -3,6 +3,9 @@ namespace App\Controller;
 
 use \PhpOffice\PhpWord\TemplateProcessor;
 use \App\Model\InvoiceData;
+use \App\Model\ClientData;
+use \App\Model\PersonalInfo;
+use \App\Model\BankData;
 
 class InvoiceController extends BaseController
 {
@@ -101,6 +104,12 @@ class InvoiceController extends BaseController
         }
     }
 
+    public function createFromForm($data)
+    {
+        $info = json_decode($data);
+        var_dump($info);
+    }
+
     public function new()
     {
         return $this->view(
@@ -108,12 +117,53 @@ class InvoiceController extends BaseController
         );
     }
 
+    public function fetchClientData($client)
+    {
+        $client_data = new ClientData($client);
+        $smarty = new \Smarty();
+
+        $smarty->assign('company_name', $client_data->getCompanyName());
+        $smarty->assign('contact_name', $client_data->getContactName());
+        $smarty->assign('contact_email', $client_data->getContactEmail());
+        $smarty->assign('company_country', $client_data->getCompanyCountry());
+        $smarty->assign('company_address', $client_data->getCompanyAddress());
+
+        return $smarty->display(PROJECT_DIR . '/templates/invoice/clientInfo.tpl');
+    }
+
+    public function fetchMyData()
+    {
+        $my_data = new PersonalInfo;
+        $smarty = new \Smarty;
+
+        $smarty->assign('my_name', $my_data->getMyName());
+        $smarty->assign('my_phone', $my_data->getMyPhone());
+        $smarty->assign('my_email', $my_data->getMyEmail());
+        $smarty->assign('my_address1', $my_data->getMyAddress1());
+        $smarty->assign('my_address2', $my_data->getMyAddress2());
+
+        return $smarty->display(PROJECT_DIR . '/templates/invoice/personalInfo.tpl');
+    }
+    public function fetchBankData()
+    {
+        $smarty = new \Smarty;
+        $bank_data = new BankData;
+
+        $smarty->assign('account_number', $bank_data->getAccountNumber());
+
+        return $smarty->display(PROJECT_DIR . '/templates/invoice/bankInfo.tpl');
+    }
+
     public function fetchServices($start_date, $end_date, $client)
     {
         $invData = new InvoiceData($start_date, $end_date, $client);
-        $projects = $invData->getSummaryProjects()->getProjects();
+        $summaryProjects = $invData->getSummaryProjects();
         $smarty = new \Smarty();
-        $smarty->assign('projects', $projects);
+        $smarty->assign('start_date', $start_date);
+        $smarty->assign('end_date', $end_date);
+        $smarty->assign('client', $client);
+        $smarty->assign('total_hours', $summaryProjects->getTotalHours());
+        $smarty->assign('projects', $summaryProjects->getProjects());
         return $smarty->display(PROJECT_DIR . '/templates/invoice/services.tpl');
     }
 
