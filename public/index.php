@@ -15,11 +15,16 @@ if (empty($_GET)) {
             $params = explode('/', filter_var($_GET['params'], FILTER_SANITIZE_URL));
             break;
         case 'POST':
-            $params = $_POST;
+            if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+                $json_str = file_get_contents('php://input');
+                $params = [$json_str];
+            } else {
+                $params = $_POST;
+            }
             break;
     }
     $classname = 'App\\Controller\\' . ucwords($controller) . 'Controller';
-    if (method_exists($classname, $method)) {
+    if (method_exists($classname, $method) && !empty($params)) {
         $obj = new $classname;
         call_user_func_array([$obj, $method], $params);
     } else {

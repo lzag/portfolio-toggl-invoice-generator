@@ -74,9 +74,10 @@ let Invoice = {
     let postData = [];
     for (const val of invoiceData) {
         const data = {};
-        data[val[0]] = val[1];
-        postData.push(data);
+        postData[val[0]] = val[1];
     } 
+    console.log(postData);
+    return;
     let my_name = invoiceData.entries();
     postData = JSON.stringify(postData);
     xhr.open(
@@ -86,7 +87,10 @@ let Invoice = {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(postData);
     xhr.onload = function() {
-      document.getElementById('bank_info').innerHTML = xhr.responseText;
+      const alert = document.getElementById('form-alert');
+      alert.setAttribute('class', 'alert alert-primary');
+      alert.setAttribute('role', 'alert');
+      alert.innerHTML = xhr.responseText;
     }
   }
 }

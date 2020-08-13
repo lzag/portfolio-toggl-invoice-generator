@@ -104,7 +104,7 @@ class InvoiceController extends BaseController
         }
     }
 
-    public function createFromForm($data)
+    public function createFromForm(string $data)
     {
         $info = json_decode($data);
         var_dump($info);
@@ -112,8 +112,16 @@ class InvoiceController extends BaseController
 
     public function new()
     {
+        $date = new \DateTime();
+        $invoice_date = $date->format('Y-m-d');
+        $invoice_due = $date->add(new \DateInterval('P30D'))->format('Y-m-d');
+
         return $this->view(
             'invoice/new',
+            [
+            'invoice_date' => $invoice_date,
+            'invoice_due' => $invoice_due,
+            ]
         );
     }
 

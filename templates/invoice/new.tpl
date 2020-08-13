@@ -1,6 +1,7 @@
 {include file="{$header}"}
 
 <div class="container">
+  <div id="form-alert"></div>
   <form class="form-horizontal row g-3" method="POST" action="#" id="invoiceForm">
     <div class="col-md-4">
       <label for="fromDate" class="form-label"><strong>From date</strong></label>
@@ -22,15 +23,15 @@
     <div class="form-group row mt-3">
       <div class="form-group col">
       <label for="invoice_date" class="form-label"><strong>Invoice date:</strong></label>
-        <input type="date" class="form-control" name="invoice_date" value="{$invoice_date|default: ''}" />
+        <input type="date" class="form-control" name="invoice_date" value="{$invoice_date|default: $invoice_date}" />
       </div>
       <div class="form-group col">
         <label for="invoice_due" class="form-label"><strong>Invoice due:</strong></label>
-        <input type="date" class="form-control" name="invoice_due" value="{$invoice_due|default: ''}" />
+        <input type="date" class="form-control" name="invoice_due" value="{$invoice_due|default: $invoice_date}" />
       </div>
       <div class="form-group col">
         <label for="invoice_no" class="form-label"><strong>Invoice no:</strong></label>
-        <input type="date" class="form-control" name="invoice_no" value="{$invoice_no|default: ''}" />
+        <input type="text" class="form-control" name="invoice_no" value="{$invoice_no|default: ''}" />
       </div>
     </div>
     <hr>
