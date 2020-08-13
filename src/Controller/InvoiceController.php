@@ -149,7 +149,11 @@ class InvoiceController extends BaseController
         $smarty = new \Smarty;
         $bank_data = new BankData;
 
+        $smarty->assign('entity_name', $bank_data->getEntityName());
         $smarty->assign('account_number', $bank_data->getAccountNumber());
+        $smarty->assign('institution_number', $bank_data->getInstitutionNumber());
+        $smarty->assign('transit_number', $bank_data->getTransitNumber());
+        $smarty->assign('swift', $bank_data->getSwift());
 
         return $smarty->display(PROJECT_DIR . '/templates/invoice/bankInfo.tpl');
     }
