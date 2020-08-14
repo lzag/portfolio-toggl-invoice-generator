@@ -49,17 +49,17 @@ class SummaryProjectData
             $this->total_hours = 0;
             foreach ($response['summary']->data as $project) {
                 if ($project->title->client === $this->client) {
-                    $this->total_hours += $project->time;
+                    $time = (int) round($project->time / 3600000);
+                    $this->total_hours += $time;
                     $items= [];
                     foreach ($project->items as $item) {
                         $items[] = $item->title->time_entry;
                     }
-                    $this->projects[] = new ProjectData($project->title->project, $project->time, $items);
+                    $this->projects[] = new ProjectData($project->title->project, $time, $items);
                 } else {
                     continue;
                 }
             }
-            $this->total_hours = (int) round($this->total_hours / 3600000);
         }
     }
 
