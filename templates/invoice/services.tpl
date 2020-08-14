@@ -9,7 +9,7 @@
       <div class="card-body">
         <h5 class="card-title">{$project->getTitle()}</h5>
         <h6 class="card-subtitle mb-2 text-muted">
-          {$project->getTotalHours()}
+          <span>{$project->getTotalHours()}</span>
           {if $project->getTotalHours() lt 2} hour
           {else} hours
           {/if}

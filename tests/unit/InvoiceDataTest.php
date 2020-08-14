@@ -1,32 +1,45 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use App\Model\InvoiceData;
+use \App\Model\PersonalInfo;
+use \App\Model\BankData;
+use \App\Model\ClientData;
 
 final class InvoiceDataTest extends TestCase
 {
+    private $invoiceData;
+
+    public function setUp(): void
+    {
+        $this->invoiceData = new InvoiceData(
+            '2020-03-01',
+            '2020-07-15',
+            new PersonalInfo,
+            new ClientData('db', 'Dummy'),
+            new BankData,
+            []
+        );
+    }
+
     public function testCanCreateInvoiceDataCorrectly()
     {
-        $invoiceData = new InvoiceData('2020-05-07', '2020-12-08', 'Dummy');
-        $this->assertNotEmpty($invoiceData);
+        $this->assertNotEmpty($this->invoiceData);
     }
 
     public function testCanSaveInvoiceToDatabase()
     {
-        $invoiceData = new InvoiceData('2020-05-07', '2020-12-08', 'Dummy');
-        $this->assertTrue($invoiceData->save());
+        $this->assertTrue($this->invoiceData->save());
     }
 
     public function testCanGetIdFromDatabase()
     {
-        $invoiceData = new InvoiceData('2020-05-07', '2020-12-08', 'Dummy');
-        $id = $invoiceData->getId();
+        $id = $this->invoiceData->getId();
         $this->assertIsInt($id);
     }
     
     public function testCanConvertToPdf()
     {
-        $invoiceData = new InvoiceData('2020-05-07', '2020-12-08', 'Dummy');
-        $invoiceData->setFilename('Invoice.docx');
-        $this->assertSame(0, $invoiceData->convertToPdf());
+        $this->invoiceData->setFilename('Invoice.docx');
+        $this->assertSame(0, $this->invoiceData->convertToPdf());
     }
 }

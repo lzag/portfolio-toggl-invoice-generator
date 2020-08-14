@@ -21,31 +21,29 @@ class InvoiceData
 
     private $db;
 
-    public function __construct($start_date, $end_date, $client, $invoice_date = '')
-    {
-        $this->start_date = $start_date;
-        $this->end_date = $end_date;
-
-        $this->client_data = new ClientData($client);
-        $this->bank_data = new BankData;
-        $this->my_data = new PersonalInfo;
-        $this->projects = $this->getSummaryProjectData($start_date, $end_date, $client);
+    public function __construct(
+        $invoice_date,
+        $invoice_due,
+        $my_data,
+        $client_data,
+        $bank_data,
+        $projects
+    ) {
+        $this->client_data = $client_data;
+        $this->bank_data = $bank_data;
+        $this->my_data = $my_data;
+        $this->projects = $projects;
+        $this->start_date = '';
+        $this->end_date = '';
 
         if ($invoice_date === '') {
             $date = new \DateTime();
             $this->invoice_date = $date->format('Y/m/d');
             $this->invoice_due = $date->add(new \DateInterval('P30D'))->format('Y/m/d');
+        } else {
+            $this->invoice_date = \DateTime::createFromFormat('Y-m-d', $invoice_date)->format('Y/m/d');
+            $this->invoice_due = \DateTime::createFromFormat('Y-m-d', $invoice_due)->format('Y/m/d');
         }
-    }
-
-    private function getSummaryProjectData($start_date, $end_date, $client)
-    {
-        return new SummaryProjectData(
-            new TogglApi,
-            $start_date,
-            $end_date,
-            $client
-        );
     }
 
     public function save()
@@ -90,7 +88,7 @@ class InvoiceData
         return $id + 1;
     }
 
-    public function getSummaryProjects()
+    public function getProjects()
     {
         return $this->projects;
     }

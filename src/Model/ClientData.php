@@ -17,22 +17,36 @@ class ClientData
 
     private $contact_email;
 
-    public function __construct($client_name)
-    {
-        $this->client_data = Helper::configValue('clients.' . $client_name);
-        if ($this->client_data) {
-            $this->company_name = $this->client_data['company_name'];
-            array_push(
-                $this->company_address,
-                $this->client_data['company_address1'],
-                $this->client_data['company_address2'],
-                $this->client_data['company_address3']
-            );
-            // filtering the empty address fields
-            $this->company_address = array_filter($this->company_address);
-            $this->company_country = $this->client_data['company_country'];
-            $this->contact_name = $this->client_data['contact_name'];
-            $this->contact_email = $this->client_data['contact_email'];
+    public function __construct(
+        $mode = 'db',
+        $company_name = '',
+        $company_country = '',
+        $company_address = [],
+        $contact_name = '',
+        $contact_email = ''
+    ) {
+        if ($mode === 'db') {
+            $this->client_data = Helper::configValue('clients.' . $company_name);
+            if ($this->client_data) {
+                $this->company_name = $this->client_data['company_name'];
+                array_push(
+                    $this->company_address,
+                    $this->client_data['company_address1'],
+                    $this->client_data['company_address2'],
+                    $this->client_data['company_address3']
+                );
+                // filtering the empty address fields
+                $this->company_address = array_filter($this->company_address);
+                $this->company_country = $this->client_data['company_country'];
+                $this->contact_name = $this->client_data['contact_name'];
+                $this->contact_email = $this->client_data['contact_email'];
+            }
+        } elseif ($mode === 'new') {
+            $this->company_name = $company_name;
+            $this->company_country = $company_country;
+            $this->company_address = $company_address;
+            $this->contact_name = $contact_name;
+            $this->contact_email = $contact_email;
         }
     }
 

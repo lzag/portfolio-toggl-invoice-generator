@@ -11,13 +11,27 @@ class PersonalInfo
     private $my_address1;
     private $my_address2;
 
-    public function __construct()
-    {
-        $this->my_name = Helper::configValue('my_data.my_name');
-        $this->my_phone = Helper::configValue('my_data.my_phone');
-        $this->my_email = Helper::configValue('my_data.my_email');
-        $this->my_address1 = Helper::configValue('my_data.my_address1');
-        $this->my_address2 = Helper::configValue('my_data.my_address2');
+    public function __construct(
+        $mode = 'default',
+        $my_name = '',
+        $my_email = '',
+        $my_phone = '',
+        $my_address1 = '',
+        $my_address2 = ''
+    ) {
+        if ($mode === 'default') {
+            $this->my_name = Helper::configValue('my_data.my_name');
+            $this->my_phone = Helper::configValue('my_data.my_phone');
+            $this->my_email = Helper::configValue('my_data.my_email');
+            $this->my_address1 = Helper::configValue('my_data.my_address1');
+            $this->my_address2 = Helper::configValue('my_data.my_address2');
+        } elseif ($mode === 'new') {
+            $this->my_name = $my_name;
+            $this->my_email = $my_email;
+            $this->my_phone = $my_phone;
+            $this->my_address1 = $my_address1;
+            $this->my_address2 = $my_address2;
+        }
     }
 
     public function getMyName()

@@ -76,7 +76,8 @@ final class SummaryProjectDataTest extends TestCase
         }
 API;
 
-        $projectSummary  = new SummaryProjectData(new TogglApi, '2020-03-05', '2020-07-01', 'Dummy');
+        $projectSummary  = new SummaryProjectData('2020-03-05', '2020-07-01', 'Dummy');
+        $projectSummary->fetchProjects(new TogglApi);
         $this->assertSame(7, $projectSummary->getTotalHours());
         $this->assertSame(1, count($projectSummary->getProjects()));
     }

@@ -6,6 +6,9 @@ use \App\Model\InvoiceData;
 use \App\Model\ClientData;
 use \App\Model\PersonalInfo;
 use \App\Model\BankData;
+use \App\Model\TogglApi;
+use \App\Model\SummaryProjectData;
+use \App\Model\ProjectData;
 
 class InvoiceController extends BaseController
 {
@@ -17,7 +20,7 @@ class InvoiceController extends BaseController
     /*
      * @param string
      */
-    private $invoice_path = 'invoices/';
+    private $invoice_path = PROJECT_DIR . '/invoices/';
 
     /*
      * Constructor function
@@ -61,7 +64,7 @@ class InvoiceController extends BaseController
         $templateProcessor->setValue('start_date', $invoiceData->getStartDate());
         $templateProcessor->setValue('end_date', $invoiceData->getEndDate());
 
-        $projects = $invoiceData->getSummaryProjects()->getProjects();
+        $projects = $invoiceData->getProjects();
         $projectValues = [];
         $subtotal = 0;
         $service_rate = 13.40;
@@ -93,8 +96,7 @@ class InvoiceController extends BaseController
         // bank data
         $templateProcessor->setValue('bank_data', $invoiceData->getBankData()->getAccountNumber());
 
-        $invoice_date = \DateTime::createFromFormat('Y/m/d', $invoiceData->getInvoiceDate());
-        $invoice_date = $invoice_date->format('Y_m_d');
+        $invoice_date = \DateTime::createFromFormat('Y/m/d', $invoiceData->getInvoiceDate())->format('Y_m_d');
         $invoice_file = $this->invoice_path . 'Invoice_' . $invoice_id . '_' . $invoice_date . '.docx';
         $return = $templateProcessor->saveAs($invoice_file);
         if (file_exists($invoice_file)) {
@@ -106,8 +108,52 @@ class InvoiceController extends BaseController
 
     public function createFromForm(string $data)
     {
-        $info = json_decode($data);
-        var_dump($info);
+        $form_data = json_decode($data);
+
+        $bank_data = new BankData(
+            'new',
+            $form_data->entity_name,
+            $form_data->account_number,
+            $form_data->transit_number,
+            $form_data->institution_number,
+            $form_data->swift,
+        );
+
+        $company_addres = [$form_data->company_address1, $form_data->company_address2];
+
+        $client_data = new ClientData(
+            'new',
+            $form_data->company_name,
+            $form_data->company_country,
+            $company_addres,
+            $form_data->contact_name,
+            $form_data->contact_email
+        );
+
+        $my_data = new PersonalInfo(
+            'new',
+            $form_data->my_name,
+            $form_data->my_email,
+            $form_data->my_phone,
+            $form_data->my_address1,
+            $form_data->my_address2,
+        );
+
+        $projects = [];
+        foreach ($form_data->projectList as $project) {
+            $projects[] = new ProjectData($project->title, $project->time, $project->items);
+        }
+
+        $invoiceData = new InvoiceData(
+            $form_data->invoice_date,
+            $form_data->invoice_due,
+            $my_data,
+            $client_data,
+            $bank_data,
+            $projects
+        );
+
+        $this->create($invoiceData);
     }
 
     public function new()
@@ -127,7 +173,7 @@ class InvoiceController extends BaseController
 
     public function fetchClientData($client)
     {
-        $client_data = new ClientData($client);
+        $client_data = new ClientData('db', $client);
         $smarty = new \Smarty();
 
         $smarty->assign('company_name', $client_data->getCompanyName());
@@ -168,8 +214,8 @@ class InvoiceController extends BaseController
 
     public function fetchServices($start_date, $end_date, $client)
     {
-        $invData = new InvoiceData($start_date, $end_date, $client);
-        $summaryProjects = $invData->getSummaryProjects();
+        $summaryProjects = new SummaryProjectData($start_date, $end_date, $client);
+        $summaryProjects->fetchProjects(new TogglApi);
         $smarty = new \Smarty();
         $smarty->assign('start_date', $start_date);
         $smarty->assign('end_date', $end_date);

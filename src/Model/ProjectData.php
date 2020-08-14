@@ -18,14 +18,11 @@ class ProjectData
      */
     private $total_hours;
 
-    public function __construct($data)
+    public function __construct($title, $total_hours, array $items)
     {
-        $this->title = $data->title->project;
-        $this->total_hours = intdiv($data->time, 3600000);
-        foreach ($data->items as $item) {
-            $this->entries[] = $item->title->time_entry;
-        }
-        return $this;
+        $this->title = $title;
+        $this->total_hours = $total_hours;
+        $this->entries = $items;
     }
 
     public function getTitle()

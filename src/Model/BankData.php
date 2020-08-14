@@ -12,13 +12,27 @@ class BankData
     private $institution_number;
     private $swift;
 
-    public function __construct()
-    {
-        $this->entity_name = Helper::configValue('bank_data.entity_name');
-        $this->account_number = Helper::configValue('bank_data.account_number');
-        $this->transit_number = Helper::configValue('bank_data.transit_number');
-        $this->institution_number = Helper::configValue('bank_data.institution_number');
-        $this->swift = Helper::configValue('bank_data.swift');
+    public function __construct(
+        $mode = 'default',
+        $entity_name = '',
+        $account_number = '',
+        $transit_number = '',
+        $institution_number = '',
+        $swift = ''
+    ) {
+        if ($mode === 'default') {
+            $this->entity_name = Helper::configValue('bank_data.entity_name');
+            $this->account_number = Helper::configValue('bank_data.account_number');
+            $this->transit_number = Helper::configValue('bank_data.transit_number');
+            $this->institution_number = Helper::configValue('bank_data.institution_number');
+            $this->swift = Helper::configValue('bank_data.swift');
+        } elseif ($mode === 'new') {
+            $this->entity_name = $entity_name;
+            $this->account_number = $account_number;
+            $this->transit_number = $transit_number;
+            $this->institution_number = $institution_number;
+            $this->swift = $swift;
+        }
     }
 
     public function getEntityName()

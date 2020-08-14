@@ -71,15 +71,27 @@ let Invoice = {
     const xhr = new XMLHttpRequest();
     const form = document.forms.invoiceForm; 
     const invoiceData = new FormData(form);
-    let postData = [];
+    let postData = {};
+    let projectsList = [];
+    const servicesCards = document.querySelectorAll('#services .card');
+    servicesCards.forEach( (e) => {
+      let project = {};
+      project.title = e.firstElementChild.firstElementChild.innerText;
+      project.time = e.firstElementChild.firstElementChild.nextElementSibling.firstElementChild.innerText;
+      project.items = [];
+      for (const item of e.firstElementChild.nextElementSibling.children) {
+        project.items.push(item.innerText);
+      }
+      projectsList.push(project);
+    });
+    
     for (const val of invoiceData) {
         const data = {};
         postData[val[0]] = val[1];
+        postData['projectList'] = projectsList;
     } 
-    console.log(postData);
-    return;
-    let my_name = invoiceData.entries();
     postData = JSON.stringify(postData);
+    console.log(postData);
     xhr.open(
       'POST',
       '{BASE_URL}/invoice/createFromForm/'
