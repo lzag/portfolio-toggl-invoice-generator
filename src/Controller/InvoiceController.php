@@ -61,13 +61,13 @@ class InvoiceController extends BaseController
         $templateProcessor->setValue('invoice_no', sprintf('%04d', $invoice_id));
         $templateProcessor->setValue('invoice_date', $invoiceData->getInvoiceDate());
         $templateProcessor->setValue('invoice_due', $invoiceData->getInvoiceDue());
-        $templateProcessor->setValue('start_date', $invoiceData->getStartDate());
-        $templateProcessor->setValue('end_date', $invoiceData->getEndDate());
+        $templateProcessor->setValue('start_date', $invoiceData->getProjectsSummary()->getStartDate());
+        $templateProcessor->setValue('end_date', $invoiceData->getProjectsSummary()->getEndDate());
 
-        $projects = $invoiceData->getProjects();
+        $projects = $invoiceData->getProjectsSummary()->getProjects();
         $projectValues = [];
         $subtotal = 0;
-        $service_rate = 13.40;
+        $service_rate = $invoiceData->getServiceRate();
         foreach ($projects as $project) {
             $total_hours = $project->getTotalHours();
             $projectValues[] = [
@@ -94,7 +94,10 @@ class InvoiceController extends BaseController
         $templateProcessor->setValue('service_total', number_format($service_total, 2));
 
         // bank data
-        $templateProcessor->setValue('bank_data', $invoiceData->getBankData()->getAccountNumber());
+        $templateProcessor->setValue('account_number', 'Acc number: ' . $invoiceData->getBankData()->getAccountNumber());
+        $templateProcessor->setValue('transit_number', 'Transit number: ' . $invoiceData->getBankData()->getTransitNumber());
+        $templateProcessor->setValue('institution_number', 'Institution number: ' . $invoiceData->getBankData()->getInstitutionNumber());
+        $templateProcessor->setValue('swift', 'Swift: ' . $invoiceData->getBankData()->getSwift());
 
         $invoice_date = \DateTime::createFromFormat('Y/m/d', $invoiceData->getInvoiceDate())->format('Y_m_d');
         $invoice_file = $this->invoice_path . 'Invoice_' . $invoice_id . '_' . $invoice_date . '.docx';
@@ -139,10 +142,8 @@ class InvoiceController extends BaseController
             $form_data->my_address2,
         );
 
-        $projects = [];
-        foreach ($form_data->projectList as $project) {
-            $projects[] = new ProjectData($project->title, $project->time, $project->items);
-        }
+        $projects = new SummaryProjectData($form_data->fromDate, $form_data->toDate, $form_data->company_name);
+        $projects->addProjects($form_data->projectList);
 
         $invoiceData = new InvoiceData(
             $form_data->invoice_date,
@@ -150,7 +151,8 @@ class InvoiceController extends BaseController
             $my_data,
             $client_data,
             $bank_data,
-            $projects
+            $projects,
+            $form_data->rate
         );
 
         $this->create($invoiceData);

@@ -3,6 +3,9 @@ namespace App\Model;
 
 use App\Model\ClientData;
 use App\Model\Database;
+use App\Model\SummaryProjectData;
+use App\Model\PersonalInfo;
+use App\Model\BankData;
 
 class InvoiceData
 {
@@ -13,28 +16,30 @@ class InvoiceData
 
     private $client_data;
 
-    private $projects;
+    private $projects_summary;
 
     private $bank_data;
 
     private $filename;
 
     private $db;
+    
+    private $rate;
 
     public function __construct(
         $invoice_date,
         $invoice_due,
-        $my_data,
-        $client_data,
-        $bank_data,
-        $projects
+        PersonalInfo $my_data,
+        ClientData $client_data,
+        BankData $bank_data,
+        SummaryProjectData $projects_summary,
+        $rate = '10.00'
     ) {
         $this->client_data = $client_data;
         $this->bank_data = $bank_data;
         $this->my_data = $my_data;
-        $this->projects = $projects;
-        $this->start_date = '';
-        $this->end_date = '';
+        $this->projects_summary = $projects_summary;
+        $this->rate = $rate;
 
         if ($invoice_date === '') {
             $date = new \DateTime();
@@ -51,11 +56,15 @@ class InvoiceData
         $db = new Database();
         $db->connect();
         $conn = $db->getConn();
+
+        $start_date = $this->projects_summary->getStartDate();
+        $end_date = $this->projects_summary->getEndDate();
+
         $sql = "INSERT INTO invoices (start_date, end_date, invoice_date, invoice_due) VALUES (?,?,?,?)";
         $stmt = $conn->prepare($sql);
         $stmt->execute([
-            $this->start_date,
-            $this->end_date,
+            $start_date,
+            $end_date,
             $this->invoice_date,
             $this->invoice_due,
             ]);
@@ -88,9 +97,9 @@ class InvoiceData
         return $id + 1;
     }
 
-    public function getProjects()
+    public function getProjectsSummary()
     {
-        return $this->projects;
+        return $this->projects_summary;
     }
 
     public function getBankData()
@@ -126,5 +135,10 @@ class InvoiceData
     public function getEndDate()
     {
         return $this->end_date;
+    }
+
+    public function getServiceRate()
+    {
+        return $this->rate;
     }
 }

@@ -32,13 +32,13 @@ class SummaryProjectData
      *
      * @param array
      */
-    public function addProjects($projects)
+    public function addProjects(array $projects): void
     {
         $this->total_hours = 0;
-        foreach ($projects as $projects) {
-            $this->total_hours += $project->getTotalHours();
+        foreach ($projects as $project) {
+            $this->projects[] = new ProjectData($project->title, $project->time, $project->items);
+            $this->total_hours += $project->time;
         }
-        $this->projects = $projects;
     }
 
     public function fetchProjects(TogglApi $api)
@@ -71,5 +71,15 @@ class SummaryProjectData
     public function getProjects()
     {
         return $this->projects;
+    }
+    
+    public function getStartDate()
+    {
+        return $this->start_date;
+    }
+
+    public function getEndDate()
+    {
+        return $this->end_date;
     }
 }

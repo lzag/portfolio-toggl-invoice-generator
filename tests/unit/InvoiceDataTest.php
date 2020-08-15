@@ -4,6 +4,7 @@ use App\Model\InvoiceData;
 use \App\Model\PersonalInfo;
 use \App\Model\BankData;
 use \App\Model\ClientData;
+use \App\Model\SummaryProjectData;
 
 final class InvoiceDataTest extends TestCase
 {
@@ -17,7 +18,7 @@ final class InvoiceDataTest extends TestCase
             new PersonalInfo,
             new ClientData('db', 'Dummy'),
             new BankData,
-            []
+            new SummaryProjectData('2020-03-01', '2020-07-15', 'Dummy')
         );
     }
 

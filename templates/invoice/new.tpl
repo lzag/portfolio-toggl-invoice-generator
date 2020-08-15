@@ -5,15 +5,15 @@
   <form class="form-horizontal row g-3" method="POST" action="#" id="invoiceForm">
     <div class="col-md-4">
       <label for="fromDate" class="form-label"><strong>From date</strong></label>
-      <input type="date" class="form-control" id="fromDate">
+      <input type="date" class="form-control" id="fromDate" name="fromDate">
     </div>
     <div class="col-md-4">
       <label for="toDate" class="form-label"><strong>To date:</strong></label>
-      <input type="date" class="form-control" id="toDate">
+      <input type="date" class="form-control" id="toDate" name="toDate">
     </div>
     <div class="col-md-4">
       <label for="client" class="form-label"><strong>Client:</strong></label>
-      <input type="text" class="form-control" id="client">
+      <input type="text" class="form-control" id="client" name="client">
     </div>
     <div class="col-md-3">
       <button id="getInvoiceData" class="btn btn-primary">Get Services</button> 
@@ -28,6 +28,10 @@
       <div class="form-group col">
         <label for="invoice_due" class="form-label"><strong>Invoice due:</strong></label>
         <input type="date" class="form-control" name="invoice_due" value="{$invoice_due|default: $invoice_date}" />
+      </div>
+      <div class="form-group col">
+        <label for="rate" class="form-label"><strong>Rate</strong></label>
+        <input type="text" class="form-control" name="rate" value="13.40" />
       </div>
       <div class="form-group col">
         <label for="invoice_no" class="form-label"><strong>Invoice no:</strong></label>
