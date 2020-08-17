@@ -51,20 +51,5 @@
 
 </div>
 
-
-
-Rate:
-
-Services:
-
-
-Subtotal:
-
-Tax Total:
-
-Total:
-
-Bank Data:
-
 {include file="{PROJECT_DIR}/templates/invoice/new.js.tpl"}
 {include file="{$footer}"}
