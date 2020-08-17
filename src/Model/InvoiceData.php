@@ -59,13 +59,15 @@ class InvoiceData
         $start_date = $this->projects_summary->getStartDate();
         $end_date = $this->projects_summary->getEndDate();
 
-        $sql = "INSERT INTO invoices (start_date, end_date, invoice_date, invoice_due) VALUES (?,?,?,?)";
+        $sql = "INSERT INTO invoices (start_date, end_date, invoice_date, invoice_due, client_name, filename) VALUES (?,?,?,?,?,?)";
         $stmt = $conn->prepare($sql);
         $stmt->execute([
             $start_date,
             $end_date,
             $this->invoice_date,
             $this->invoice_due,
+            $this->client_data->getCompanyName(),
+            $this->filename,
             ]);
         return $conn->lastInsertId();
     }

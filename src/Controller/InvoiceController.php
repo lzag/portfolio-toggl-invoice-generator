@@ -104,6 +104,7 @@ class InvoiceController extends BaseController
         $invoice_file = $this->invoice_path . 'Invoice_' . $invoice_id . '_' . $invoice_date . '.docx';
         $return = $templateProcessor->saveAs($invoice_file);
         if (file_exists($invoice_file)) {
+            $invoiceData->setFilename(basename($invoice_file));
             $dbid = $invoiceData->save(new Database);
             return $dbid;
         } else {
