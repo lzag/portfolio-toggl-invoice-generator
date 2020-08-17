@@ -51,9 +51,8 @@ class InvoiceData
         }
     }
 
-    public function save()
+    public function save(Database $db)
     {
-        $db = new Database();
         $db->connect();
         $conn = $db->getConn();
 
@@ -87,9 +86,8 @@ class InvoiceData
         return $return_var;
     }
 
-    public function getId()
+    public function getId(Database $db)
     {
-        $db = new Database();
         $db->connect();
         $conn = $db->getConn();
         $sql = "SELECT MAX(id) AS id FROM invoices";

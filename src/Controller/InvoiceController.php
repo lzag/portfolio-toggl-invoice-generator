@@ -9,6 +9,7 @@ use \App\Model\BankData;
 use \App\Model\TogglApi;
 use \App\Model\SummaryProjectData;
 use \App\Model\ProjectData;
+use \App\Model\Database;
 
 class InvoiceController extends BaseController
 {
@@ -57,7 +58,7 @@ class InvoiceController extends BaseController
         $templateProcessor->setValue('contact_email', $invoiceData->getClientData()->getContactEmail());
 
         // invoice data section
-        $invoice_id = $invoiceData->getId();
+        $invoice_id = $invoiceData->getId(new Database);
         $templateProcessor->setValue('invoice_no', sprintf('%04d', $invoice_id));
         $templateProcessor->setValue('invoice_date', $invoiceData->getInvoiceDate());
         $templateProcessor->setValue('invoice_due', $invoiceData->getInvoiceDue());
@@ -103,6 +104,7 @@ class InvoiceController extends BaseController
         $invoice_file = $this->invoice_path . 'Invoice_' . $invoice_id . '_' . $invoice_date . '.docx';
         $return = $templateProcessor->saveAs($invoice_file);
         if (file_exists($invoice_file)) {
+            $invoiceData->save(new Database);
             return true;
         } else {
             return false;

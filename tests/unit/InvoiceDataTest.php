@@ -5,6 +5,7 @@ use \App\Model\PersonalInfo;
 use \App\Model\BankData;
 use \App\Model\ClientData;
 use \App\Model\SummaryProjectData;
+use \App\Model\Database;
 
 final class InvoiceDataTest extends TestCase
 {
@@ -29,12 +30,12 @@ final class InvoiceDataTest extends TestCase
 
     public function testCanSaveInvoiceToDatabase()
     {
-        $this->assertTrue($this->invoiceData->save());
+        $this->assertTrue($this->invoiceData->save(new Database));
     }
 
     public function testCanGetIdFromDatabase()
     {
-        $id = $this->invoiceData->getId();
+        $id = $this->invoiceData->getId(new Database);
         $this->assertIsInt($id);
     }
     
