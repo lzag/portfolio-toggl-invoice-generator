@@ -67,7 +67,7 @@ class InvoiceData
             $this->invoice_date,
             $this->invoice_due,
             ]);
-        return true;
+        return $conn->lastInsertId();
     }
 
     public function setFilename($name)

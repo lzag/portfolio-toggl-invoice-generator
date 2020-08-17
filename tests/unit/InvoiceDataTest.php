@@ -30,7 +30,7 @@ final class InvoiceDataTest extends TestCase
 
     public function testCanSaveInvoiceToDatabase()
     {
-        $this->assertTrue($this->invoiceData->save(new Database));
+        $this->assertIsString($this->invoiceData->save(new Database));
     }
 
     public function testCanGetIdFromDatabase()

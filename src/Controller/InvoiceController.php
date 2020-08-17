@@ -39,7 +39,7 @@ class InvoiceController extends BaseController
      * @param InvoiceData
      * @return bool
      */
-    public function create(InvoiceData $invoiceData): bool
+    public function create(InvoiceData $invoiceData)
     {
         $templateProcessor = new TemplateProcessor(PROJECT_DIR . '/invoice_templates/Invoice_template.docx');
 
@@ -104,8 +104,8 @@ class InvoiceController extends BaseController
         $invoice_file = $this->invoice_path . 'Invoice_' . $invoice_id . '_' . $invoice_date . '.docx';
         $return = $templateProcessor->saveAs($invoice_file);
         if (file_exists($invoice_file)) {
-            $invoiceData->save(new Database);
-            return true;
+            $dbid = $invoiceData->save(new Database);
+            return $dbid;
         } else {
             return false;
         }
@@ -124,13 +124,13 @@ class InvoiceController extends BaseController
             $form_data->swift,
         );
 
-        $company_addres = [$form_data->company_address1, $form_data->company_address2];
+        $company_address = [$form_data->company_address1, $form_data->company_address2, $form_data->company_address3];
 
         $client_data = new ClientData(
             'new',
             $form_data->company_name,
             $form_data->company_country,
-            $company_addres,
+            $company_address,
             $form_data->contact_name,
             $form_data->contact_email
         );
@@ -157,7 +157,8 @@ class InvoiceController extends BaseController
             $form_data->rate
         );
 
-        $this->create($invoiceData);
+        $id = $this->create($invoiceData);
+        return print('Invoice no. ' . $id . ' generated');
     }
 
     public function new()

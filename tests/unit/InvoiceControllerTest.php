@@ -21,6 +21,6 @@ final class InvoiceControllerTest extends TestCase
             new BankData,
             new SummaryProjectData('2020-03-01', '2020-07-15', 'Dummy')
         ));
-        $this->assertTrue($result);
+        $this->assertIsString($result);
     }
 }
