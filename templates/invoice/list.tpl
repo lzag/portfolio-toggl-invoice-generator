@@ -8,6 +8,7 @@
     <p class="card-text">Services from {$invoice->start_date} to {$invoice->end_date}</p>
 
     <a href="invoice/download/{$invoice->filename}" class="card-link">See invoice</a>
+    <a href="invoice/delete/{$invoice->id}" class="card-link">Delete invoice</a>
   </div>
 </div>
 {/foreach}

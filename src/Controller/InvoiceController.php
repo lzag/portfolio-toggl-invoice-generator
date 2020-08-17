@@ -282,4 +282,9 @@ class InvoiceController extends BaseController
             exit;
         }
     }
+
+    public function delete($id)
+    {
+        InvoiceData::delete(new Database, $id);
+    }
 }

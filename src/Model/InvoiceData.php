@@ -119,6 +119,26 @@ class InvoiceData
         return $conn->query($sql)->fetchAll(\PDO::FETCH_OBJ);
     }
 
+    public static function delete(Database $db, $id)
+    {
+        $id = (int) $id;
+        if (filter_var($id, FILTER_SANITIZE_NUMBER_INT)) {
+            $db->connect();
+            $conn = $db->getConn();
+            $sql = "DELETE FROM invoices
+                    WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$id]);
+            if ($stmt->rowCount()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public function getProjectsSummary()
     {
         return $this->projects_summary;
