@@ -35,8 +35,6 @@ class ClientData
                     $this->client_data['company_address2'],
                     $this->client_data['company_address3']
                 );
-                // filtering the empty address fields
-                $this->company_address = array_filter($this->company_address);
                 $this->company_country = $this->client_data['company_country'];
                 $this->contact_name = $this->client_data['contact_name'];
                 $this->contact_email = $this->client_data['contact_email'];
@@ -62,7 +60,7 @@ class ClientData
 
     public function getFormattedAddress()
     {
-        return implode('</w:t><w:br/><w:t>', $this->company_address);
+        return implode('</w:t><w:br/><w:t>', array_filter($this->company_address));
     }
 
     public function getCompanyCountry()

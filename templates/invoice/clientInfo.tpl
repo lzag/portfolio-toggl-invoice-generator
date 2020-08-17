@@ -23,11 +23,21 @@
       <input class="form-control" name="company_country" type="text" value="{$company_country}" />
     </div>
   </div>
-  {foreach from=$company_address item=$addressline key=$key}
-    <div class="form-group row mb-3">
-      <label class="col-sm-3" for="company_address{$key+1}"><strong>Address line {$key+1}</strong></label>
-      <div class="col-sm-9">
-        <input class="form-control" name="company_address{$key+1}" type="text" value="{$addressline}" />
-      </div>
+  <div class="form-group row mb-3">
+    <label class="col-sm-3" for="company_address1"><strong>Address line 1</strong></label>
+    <div class="col-sm-9">
+      <input class="form-control" name="company_address1" type="text" value="{$company_address[0]|default: ''}" />
     </div>
-  {/foreach}
+  </div>
+  <div class="form-group row mb-3">
+    <label class="col-sm-3" for="company_address2"><strong>Address line 2</strong></label>
+    <div class="col-sm-9">
+      <input class="form-control" name="company_address2" type="text" value="{$company_address[1]|default: ''}" />
+    </div>
+  </div>
+  <div class="form-group row mb-3">
+    <label class="col-sm-3" for="company_address3"><strong>Address line 3</strong></label>
+    <div class="col-sm-9">
+      <input class="form-control" name="company_address3" type="text" value="{$company_address[2]|default: ''}" />
+    </div>
+  </div>
