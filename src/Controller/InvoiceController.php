@@ -254,4 +254,32 @@ class InvoiceController extends BaseController
             ]
         );
     }
+
+    public function list()
+    {
+        $invoices = InvoiceData::getAll(new Database);
+        return $this->view(
+            'invoice/list',
+            [
+            'title'        => 'List Invoices',
+            'invoices' => $invoices,
+            ]
+        );
+    }
+
+    public function download($filename)
+    {
+        $file = INVOICES_DIR . '/' . $filename;
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.$filename.'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            readfile($file);
+            exit;
+        }
+    }
 }

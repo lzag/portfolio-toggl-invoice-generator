@@ -36,7 +36,7 @@ final class InvoiceDataTest extends TestCase
     public function testCanGetIdFromDatabase()
     {
         $id = $this->invoiceData->getId(new Database);
-        $this->assertIsInt($id);
+        $this->assertIsString($id);
     }
     
     public function testCanConvertToPdf()

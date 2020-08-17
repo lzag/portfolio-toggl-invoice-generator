@@ -92,9 +92,31 @@ class InvoiceData
     {
         $db->connect();
         $conn = $db->getConn();
-        $sql = "SELECT MAX(id) AS id FROM invoices";
+        $sql = "
+                SELECT AUTO_INCREMENT as id
+                FROM  INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_SCHEMA = 'demodb'
+                AND   TABLE_NAME   = 'invoices';
+                ";
         $id = $conn->query($sql)->fetchObject()->id;
-        return $id + 1;
+        return $id;
+    }
+
+    public static function getAll(Database $db)
+    {
+        $db->connect();
+        $conn = $db->getConn();
+        $sql = "SELECT
+                id,
+                start_date,
+                end_date,
+                invoice_date,
+                invoice_due,
+                client_name,
+                filename
+                FROM
+                invoices";
+        return $conn->query($sql)->fetchAll(\PDO::FETCH_OBJ);
     }
 
     public function getProjectsSummary()
