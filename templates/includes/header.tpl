@@ -28,8 +28,8 @@
             </ul>
           </li>
         </ul>
-        <form class="d-flex">
-          <input class="form-control mr-2" type="search" placeholder="Search invoices" aria-label="Search">
+        <form id="searchForm" action="invoice/search/" class="d-flex">
+          <input id="searchTerm" class="form-control mr-2" type="search" placeholder="Search client name" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
       </div>

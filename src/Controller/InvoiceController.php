@@ -287,4 +287,18 @@ class InvoiceController extends BaseController
     {
         InvoiceData::delete(new Database, $id);
     }
+
+    public function search($term = '')
+    {
+        $term = filter_var($term, FILTER_SANITIZE_STRING);
+        $results = InvoiceData::search(new Database, $term);
+        $title = $results ? 'Search results for ' . $term : 'No search results';
+        return $this->view(
+            'invoice/list',
+            [
+            'title'        => $title,
+            'invoices'      => $results,
+            ]
+        );
+    }
 }

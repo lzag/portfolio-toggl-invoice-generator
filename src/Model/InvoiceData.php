@@ -138,6 +138,30 @@ class InvoiceData
             return false;
         }
     }
+    
+    public static function search(Database $db, string $term): array
+    {
+        $db->connect();
+        $conn = $db->getConn();
+        $sql = "SELECT
+                id,
+                start_date,
+                end_date,
+                invoice_date,
+                invoice_due,
+                client_name,
+                filename
+                FROM
+                invoices
+                WHERE
+                (
+                client_name LIKE ?
+                OR filename LIKE ?
+                )";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(["%{$term}%", "%{$term}%"]);
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+    }
 
     public function getProjectsSummary()
     {
