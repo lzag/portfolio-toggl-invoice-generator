@@ -5,7 +5,8 @@
     },
     "require": {
         "phpoffice/phpword": "^0.17.0",
-        "smarty/smarty": "^3.1"
+        "smarty/smarty": "^3.1",
+        "fzaninotto/faker": "^1.9"
     },
     "autoload": {
         "psr-4": {
