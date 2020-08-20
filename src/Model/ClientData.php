@@ -2,6 +2,7 @@
 namespace App\Model;
 
 use App\Helper;
+use \App\Model\Database;
 
 class ClientData
 {
@@ -26,18 +27,37 @@ class ClientData
         $contact_email = ''
     ) {
         if ($mode === 'db') {
-            $this->client_data = Helper::configValue('clients.' . $company_name);
-            if ($this->client_data) {
-                $this->company_name = $this->client_data['company_name'];
+            $db = new Database;
+            $db->connect();
+            $conn = $db->getConn();
+            $sql = "
+                SELECT
+                company_name,
+                company_address1,
+                company_address2,
+                company_address3,
+                company_country,
+                contact_name,
+                contact_email
+                FROM
+                clients
+                WHERE
+                company_name = ?
+                ";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$company_name]);
+            $result = $stmt->fetchObject();
+            if ($result) {
+                $this->company_name = $result->company_name;
                 array_push(
                     $this->company_address,
-                    $this->client_data['company_address1'],
-                    $this->client_data['company_address2'],
-                    $this->client_data['company_address3']
+                    $result->company_address1,
+                    $result->company_address2,
+                    $result->company_address3
                 );
-                $this->company_country = $this->client_data['company_country'];
-                $this->contact_name = $this->client_data['contact_name'];
-                $this->contact_email = $this->client_data['contact_email'];
+                $this->company_country = $result->company_country;
+                $this->contact_name = $result->contact_name;
+                $this->contact_email = $result->contact_email;
             }
         } elseif ($mode === 'new') {
             $this->company_name = $company_name;
