@@ -20,4 +20,9 @@ class SystemController extends BaseController
         echo $message;
         return "seeding  {$created} records finished";
     }
+    
+    public function clear()
+    {
+        InvoiceSeeder::clear();
+    }
 }

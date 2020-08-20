@@ -12,9 +12,14 @@ class InvoiceSeeder
         return;
     }
 
-    public static function clearDatabase()
+    public static function clear()
     {
-        return;
+        $db = new Database;
+        $db->connect();
+        $conn = $db->getConn();
+        $result = $conn->query('TRUNCATE TABLE invoices');
+
+        return $result === false ? false : true;
     }
 
     public static function seed(Database $db, $number)
@@ -32,12 +37,14 @@ class InvoiceSeeder
 
             $sql = "
                     INSERT INTO invoices
-                    (start_date,
+                    (
+                    start_date,
                     end_date,
                     invoice_date,
                     invoice_due,
                     client_name,
-                    filename)
+                    filename
+                    )
                     VALUES (?, ?, ?, ?, ?, ?)
                     ";
             $stmt = $conn->prepare($sql);
